@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">Mvp_mvvm</string>
+    <string name="login_helper_text">Логин или адрес эл. почты</string>
+    <string name="login_hint">Логин или адрес эл. почты</string>
+    <string name="password_hint">Пароль</string>
+    <string name="password_helper_text">Пароль</string>
+    <string name="login_button_text">Войти</string>
+    <string name="registration_button_text">Создать аккаунт</string>
+    <string name="forgot_button_text">Забыли логин?</string>
 </resources>
