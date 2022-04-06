@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity(), LoginContract.View {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        presenter = LoginPresenter()
+        presenter = restorePresenter()
         presenter?.onAttach(this)
 
         binding.loginButton.setOnClickListener {
@@ -34,6 +34,15 @@ class MainActivity : AppCompatActivity(), LoginContract.View {
         binding.registrationButton.setOnClickListener {
             presenter?.onRegistration()
         }
+    }
+
+    private fun restorePresenter(): LoginPresenter {
+        val presenter = lastCustomNonConfigurationInstance as? LoginPresenter
+        return presenter ?: LoginPresenter()
+    }
+
+    override fun onRetainCustomNonConfigurationInstance(): Any? {
+        return presenter
     }
 
     override fun setSuccess() {
