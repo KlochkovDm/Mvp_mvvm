@@ -7,4 +7,7 @@
     <string name="login_button_text">Войти</string>
     <string name="registration_button_text">Создать аккаунт</string>
     <string name="forgot_button_text">Забыли логин?</string>
+    <string name="alert_title_authorization_status">Статус Авторизации</string>
+    <string name="success_alert_message">Авторизация успешна</string>
+    <string name="alert_positive_button_text">ОК</string>
 </resources>

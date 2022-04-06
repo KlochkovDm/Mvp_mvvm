@@ -2,10 +2,11 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main"
+        android:id="@+id/login_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -92,5 +93,9 @@
         app:backgroundTint="@color/purple_700"
         app:srcCompat="@drawable/ic_baseline_report_problem"
         app:tint="@color/white" />
+
+    <include
+        android:id="@+id/loadingLayout"
+        layout="@layout/loading_layout" />
 
 </FrameLayout>
