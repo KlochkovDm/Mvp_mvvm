@@ -1,12 +1,18 @@
-package com.example.mvp_mvvm
+package com.example.mvp_mvvm.ui
 
 import android.app.Activity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.mvp_mvvm.R
+import com.example.mvp_mvvm.app
+import com.example.mvp_mvvm.data.LoginUseCaseImpl
 import com.example.mvp_mvvm.databinding.ActivityMainBinding
+import com.example.mvp_mvvm.domain.LoginUseCase
 
 class MainActivity : AppCompatActivity(), LoginContract.View {
 
@@ -38,7 +44,7 @@ class MainActivity : AppCompatActivity(), LoginContract.View {
 
     private fun restorePresenter(): LoginPresenter {
         val presenter = lastCustomNonConfigurationInstance as? LoginPresenter
-        return presenter ?: LoginPresenter()
+        return presenter ?: LoginPresenter(app.loginUseCase)
     }
 
     override fun onRetainCustomNonConfigurationInstance(): Any? {
