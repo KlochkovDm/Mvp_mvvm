@@ -12,7 +12,7 @@ import com.example.mvp_mvvm.domain.LoginUseCase
 class App : Application() {
     private val loginApi: LoginApi by lazy {MockLoginApiImpl()}
     val loginUseCase : LoginUseCase by lazy {
-        LoginUseCaseImpl(app.loginApi, Handler(Looper.getMainLooper()))
+        LoginUseCaseImpl(app.loginApi, Handler(Looper.getMainLooper()), applicationContext)
     }
 }
 

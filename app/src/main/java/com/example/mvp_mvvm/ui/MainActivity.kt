@@ -2,17 +2,13 @@ package com.example.mvp_mvvm.ui
 
 import android.app.Activity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.mvp_mvvm.R
 import com.example.mvp_mvvm.app
-import com.example.mvp_mvvm.data.LoginUseCaseImpl
 import com.example.mvp_mvvm.databinding.ActivityMainBinding
-import com.example.mvp_mvvm.domain.LoginUseCase
 
 class MainActivity : AppCompatActivity(), LoginContract.View {
 
@@ -28,17 +24,22 @@ class MainActivity : AppCompatActivity(), LoginContract.View {
 
         binding.loginButton.setOnClickListener {
             presenter?.onLogin(
-                binding.inputLoginText.text.toString(),
-                binding.inputPasswordText.text.toString()
+                binding.loginEditText.text.toString(),
+                binding.passwordEditText.text.toString()
             )
         }
 
-        binding.forgotButton.setOnClickListener {
-            presenter?.onForgotPassword()
+        binding.forgotPasswordButton.setOnClickListener {
+            presenter?.onForgotPassword(
+                binding.loginEditText.text.toString()
+            )
         }
 
         binding.registrationButton.setOnClickListener {
-            presenter?.onRegistration()
+            presenter?.onRegistration(
+                binding.loginEditText.text.toString(),
+                binding.passwordEditText.text.toString()
+            )
         }
     }
 
@@ -70,19 +71,27 @@ class MainActivity : AppCompatActivity(), LoginContract.View {
             ) { dialog, _ -> dialog.dismiss() }
             .setNeutralButton(
                 "Создать аккаунт"
-            ) { dialog, _ -> dialog.dismiss(); presenter?.onRegistration() }
+            ) { dialog, _ ->
+                dialog.dismiss(); presenter?.onRegistration(
+                binding.loginEditText.text.toString(),
+                binding.passwordEditText.text.toString()
+            )
+            }
             .setNegativeButton(
                 "Сообщить о проблеме"
-            ) { dialog, _ -> dialog.dismiss(); presenter?.onForgotPassword() }
+            ) { dialog, _ -> dialog.dismiss(); presenter?.onForgotPassword(
+                binding.loginEditText.text.toString()
+            )
+            }
             .show()
     }
 
     override fun showProgress() {
         binding.loadingLayout.root.visibility = View.VISIBLE
         binding.loginButton.isEnabled = false
-        binding.inputLoginLayout.isEnabled = false
-        binding.inputPasswordLayout.isEnabled = false
-        binding.forgotButton.isEnabled = false
+        binding.loginInputLayout.isEnabled = false
+        binding.passwordInputLayout.isEnabled = false
+        binding.forgotPasswordButton.isEnabled = false
         binding.registrationButton.isEnabled = false
         binding.fab.isEnabled = false
         hideKeyboard(this)
@@ -91,9 +100,9 @@ class MainActivity : AppCompatActivity(), LoginContract.View {
     override fun hideProgress() {
         binding.loadingLayout.root.visibility = View.GONE
         binding.loginButton.isEnabled = true
-        binding.inputLoginLayout.isEnabled = true
-        binding.inputPasswordLayout.isEnabled = true
-        binding.forgotButton.isEnabled = true
+        binding.loginInputLayout.isEnabled = true
+        binding.passwordInputLayout.isEnabled = true
+        binding.forgotPasswordButton.isEnabled = true
         binding.registrationButton.isEnabled = true
         binding.fab.isEnabled = true
     }
