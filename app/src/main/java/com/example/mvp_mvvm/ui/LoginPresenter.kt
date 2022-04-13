@@ -1,7 +1,5 @@
 package com.example.mvp_mvvm.ui
 
-import android.app.Activity
-import android.widget.Toast
 import com.example.mvp_mvvm.domain.LoginUseCase
 
 class LoginPresenter (private val loginUseCase: LoginUseCase) : LoginContract.Presenter {
@@ -28,13 +26,15 @@ class LoginPresenter (private val loginUseCase: LoginUseCase) : LoginContract.Pr
         }
     }
 
-    override fun onRegistration() {
-        loginUseCase.registration()
-        Toast.makeText((view as Activity), "Registration starts", Toast.LENGTH_LONG).show()
+    override fun onRegistration(login: String, password: String) {
+        view?.showProgress()
+        loginUseCase.registration(login, password)
+        view?.hideProgress()
     }
 
-    override fun onForgotPassword() {
-        loginUseCase.forgotPassword()
-        Toast.makeText((view as Activity), "Forgot Password starts", Toast.LENGTH_LONG).show()
+    override fun onForgotPassword(login: String) {
+        view?.showProgress()
+        loginUseCase.forgotPassword(login)
+        view?.hideProgress()
     }
 }

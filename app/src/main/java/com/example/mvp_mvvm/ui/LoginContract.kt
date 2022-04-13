@@ -25,9 +25,9 @@ class LoginContract {
         fun onLogin(login: String, password: String)
 
         @MainThread
-        fun onRegistration()
+        fun onRegistration(login: String, password: String)
 
         @MainThread
-        fun onForgotPassword()
+        fun onForgotPassword(login: String)
     }
 }

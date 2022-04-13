@@ -7,12 +7,7 @@ class WebLoginApiImpl : LoginApi {
         TODO("Not yet implemented")
     }
 
-    override fun registration(
-        login: String,
-        password: String,
-        email: String,
-        date: String
-    ): Boolean {
+    override fun registration(login: String, password: String) {
         TODO("Not yet implemented")
     }
 
@@ -20,7 +15,8 @@ class WebLoginApiImpl : LoginApi {
         TODO("Not yet implemented")
     }
 
-    override fun forgotPassword(login: String): Boolean {
+    override fun forgotPassword(login: String) {
         TODO("Not yet implemented")
     }
+
 }
