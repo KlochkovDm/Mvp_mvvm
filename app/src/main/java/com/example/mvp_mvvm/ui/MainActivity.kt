@@ -2,6 +2,8 @@ package com.example.mvp_mvvm.ui
 
 import android.app.Activity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AlertDialog
@@ -10,49 +12,71 @@ import com.example.mvp_mvvm.R
 import com.example.mvp_mvvm.app
 import com.example.mvp_mvvm.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(), LoginContract.View {
+class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private var presenter: LoginContract.Presenter? = null
+    private var viewModel: LoginContract.ViewModel? = null
+    private val handler: Handler by lazy { Handler(Looper.getMainLooper()) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        presenter = restorePresenter()
-        presenter?.onAttach(this)
+        viewModel = restoreViewModel()
 
         binding.loginButton.setOnClickListener {
-            presenter?.onLogin(
+            viewModel?.onLogin(
                 binding.loginEditText.text.toString(),
                 binding.passwordEditText.text.toString()
             )
         }
 
         binding.forgotPasswordButton.setOnClickListener {
-            presenter?.onForgotPassword(
+            viewModel?.onForgotPassword(
                 binding.loginEditText.text.toString()
             )
         }
 
         binding.registrationButton.setOnClickListener {
-            presenter?.onRegistration(
+            viewModel?.onRegistration(
                 binding.loginEditText.text.toString(),
                 binding.passwordEditText.text.toString()
             )
         }
+
+        viewModel?.shouldShowProgress?.subscribe(handler) { shouldShowProgress ->
+            if (shouldShowProgress == true) {
+                showProgress()
+            } else {
+                hideProgress()
+            }
+        }
+
+        viewModel?.isSuccess?.subscribe(handler) {
+            if (it == true) {
+                setSuccess()
+            } else {
+                setError()
+            }
+        }
     }
 
-    private fun restorePresenter(): LoginPresenter {
-        val presenter = lastCustomNonConfigurationInstance as? LoginPresenter
-        return presenter ?: LoginPresenter(app.loginUseCase)
+    override fun onDestroy() {
+        super.onDestroy()
+        viewModel?.isSuccess?.unsubscribeAll()
+        viewModel?.shouldShowProgress?.unsubscribeAll()
+    }
+
+    private fun restoreViewModel(): LoginViewModel {
+        val viewModel = lastCustomNonConfigurationInstance as? LoginViewModel
+        return viewModel ?: LoginViewModel(app.loginUseCase)
     }
 
     override fun onRetainCustomNonConfigurationInstance(): Any? {
-        return presenter
+        return viewModel
     }
 
-    override fun setSuccess() {
+    private fun setSuccess() {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.alert_title_authorization_status))
             .setMessage(getString(R.string.success_alert_message))
@@ -62,7 +86,7 @@ class MainActivity : AppCompatActivity(), LoginContract.View {
             .show()
     }
 
-    override fun setError() {
+    private fun setError() {
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.alert_title_authorization_status))
             .setMessage("Неверный логин / пароль")
@@ -72,21 +96,22 @@ class MainActivity : AppCompatActivity(), LoginContract.View {
             .setNeutralButton(
                 "Создать аккаунт"
             ) { dialog, _ ->
-                dialog.dismiss(); presenter?.onRegistration(
+                dialog.dismiss(); viewModel?.onRegistration(
                 binding.loginEditText.text.toString(),
                 binding.passwordEditText.text.toString()
             )
             }
             .setNegativeButton(
                 "Сообщить о проблеме"
-            ) { dialog, _ -> dialog.dismiss(); presenter?.onForgotPassword(
+            ) { dialog, _ ->
+                dialog.dismiss(); viewModel?.onForgotPassword(
                 binding.loginEditText.text.toString()
             )
             }
             .show()
     }
 
-    override fun showProgress() {
+    private fun showProgress() {
         binding.loadingLayout.root.visibility = View.VISIBLE
         binding.loginButton.isEnabled = false
         binding.loginInputLayout.isEnabled = false
@@ -97,7 +122,7 @@ class MainActivity : AppCompatActivity(), LoginContract.View {
         hideKeyboard(this)
     }
 
-    override fun hideProgress() {
+    private fun hideProgress() {
         binding.loadingLayout.root.visibility = View.GONE
         binding.loginButton.isEnabled = true
         binding.loginInputLayout.isEnabled = true

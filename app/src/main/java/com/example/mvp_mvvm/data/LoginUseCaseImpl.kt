@@ -12,7 +12,6 @@ import com.example.mvp_mvvm.domain.LoginUseCase
 
 class LoginUseCaseImpl(
     private val api: LoginApi,
-    private val uiHandler: Handler,
     private val context: Context
     ) : LoginUseCase {
 
@@ -23,15 +22,12 @@ class LoginUseCaseImpl(
     ) {
         Thread {
             val result = api.login(login, password)
-            uiHandler.post {
                 callback(result)
-            }
         }.start()
     }
 
     override fun registration(login: String, password: String) {
         Thread {
-            uiHandler.post {
                 api.registration(login, password)
                 val browserIntent = Intent(
                     Intent.ACTION_VIEW,
@@ -39,13 +35,11 @@ class LoginUseCaseImpl(
                 )
                 browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(context, browserIntent, Bundle())
-            }
         }.start()
     }
 
     override fun forgotPassword(login: String) {
         Thread {
-            uiHandler.post {
                 api.forgotPassword(login)
                 val browserIntent = Intent(
                     Intent.ACTION_VIEW,
@@ -53,7 +47,6 @@ class LoginUseCaseImpl(
                 )
                 browserIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(context, browserIntent, Bundle())
-            }
         }.start()
     }
 }
