@@ -1,25 +1,13 @@
 package com.example.mvp_mvvm.ui
 
 import androidx.annotation.MainThread
+import com.example.mvp_mvvm.utils.Publisher
 
-class LoginContract {
-    interface View {
-        @MainThread
-        fun setSuccess()
+interface LoginContract {
 
-        @MainThread
-        fun setError()
-
-        @MainThread
-        fun showProgress()
-
-        @MainThread
-        fun hideProgress()
-    }
-
-    interface Presenter {
-        @MainThread
-        fun onAttach(view: View)
+    interface ViewModel {
+        val shouldShowProgress: Publisher<Boolean>
+        val isSuccess: Publisher<Boolean>
 
         @MainThread
         fun onLogin(login: String, password: String)
